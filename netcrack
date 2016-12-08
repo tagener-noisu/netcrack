@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+require 'getoptlong'
+require_relative 'lib/netcrack'
+
+def print_usage
+    $stderr.puts <<-EOF
+netcrack #{Netcrack::VERSION}
+Usage:
+start in a server mode:   netcrack -s [port]
+connect to a server:      netcrack [host] [port]
+
+Options:
+    -s, --server=PORT           start a server listening the given port
+    -v, --verbose               make netcrack output useful messages
+    -h, --help                  display this help and exit
+EOF
+    exit
+end
+
+def listen(port, input, verbose)
+    s = Netcrack::Server.new(port, input, verbose)
+    trap 'INT' do
+        s.shutdown
+        exit
+    end
+    s.start
+    exit
+end
+
+def connect(host, port, verbose)
+    c = Netcrack::Client.new(host, port, verbose)
+    trap 'INT' do
+        c.shutdown
+        exit
+    end
+    c.start
+    exit
+end
+
+opts = GetoptLong.new(
+    ['--server', '-s', GetoptLong::REQUIRED_ARGUMENT],
+    ['--verbose', '-v', GetoptLong::NO_ARGUMENT],
+    ['--help', '-h', GetoptLong::NO_ARGUMENT])
+
+
+verbose = false
+input = $stdin
+opts.each { |opt, arg|
+    case opt
+        when "--help"
+            print_usage
+        when "--verbose"
+            verbose = true
+        when "--server"
+            port = arg.to_i
+            listen(port, input, verbose)
+        else
+            print_usage
+        end
+}
+
+if (ARGF.argv.length < 2)
+    print_usage
+end
+connect(ARGF.argv[0], ARGF.argv[1].to_i, verbose)
+
+# vim:ts=4:sw=0:sts=4:et:
