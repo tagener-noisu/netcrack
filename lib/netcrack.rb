@@ -42,7 +42,7 @@ class Server
     end
 
     def banner
-        "netcrack  server #{VERSION}"
+        "netcrack #{VERSION}"
     end
 
     def process(input)
