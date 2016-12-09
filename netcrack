@@ -17,8 +17,13 @@ EOF
     exit
 end
 
-def listen(port, input, verbose)
-    s = Netcrack::Server.new(port, input, verbose)
+def listen(port, options)
+    default_opts = {
+        verbose: false
+    }
+    options.merge(default_opts) { |k, new, default| new || default }
+
+    s = Netcrack::Server.new(port, options)
     trap 'INT' do
         s.shutdown
         exit
@@ -27,8 +32,13 @@ def listen(port, input, verbose)
     exit
 end
 
-def connect(host, port, verbose)
-    c = Netcrack::Client.new(host, port, verbose)
+def connect(host, port, options)
+    default_opts = {
+        verbose: false
+    }
+    options.merge(default_opts) { |k, new, default| new || default }
+
+    c = Netcrack::Client.new(host, port, options)
     trap 'INT' do
         c.shutdown
         exit
@@ -43,17 +53,18 @@ opts = GetoptLong.new(
     ['--help',    '-h', GetoptLong::NO_ARGUMENT])
 
 
-verbose = false
-input = $stdin
+options = {
+    verbose: false
+}
 opts.each { |opt, arg|
     case opt
         when "--help"
             print_usage
         when "--verbose"
-            verbose = true
+            options[:verbose] = true
         when "--server"
             port = arg.to_i
-            listen(port, input, verbose)
+            listen(port, options)
         else
             print_usage
         end
@@ -62,6 +73,6 @@ opts.each { |opt, arg|
 if (ARGF.argv.length < 2)
     print_usage
 end
-connect(ARGF.argv[0], ARGF.argv[1].to_i, verbose)
+connect(ARGF.argv[0], ARGF.argv[1].to_i, options)
 
 # vim:ts=4:sw=0:sts=4:et:

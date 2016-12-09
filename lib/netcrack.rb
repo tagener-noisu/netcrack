@@ -5,10 +5,9 @@ module Netcrack
 VERSION = "0.0.1"
 
 class Server
-    def initialize(port, input_stream, verbose =false)
+    def initialize(port, options)
         @port = port
-        @input_stream = input_stream
-        @verbose = verbose
+        @verbose = options[:verbose]
     end
 
     def start
@@ -65,10 +64,10 @@ class Server
 end
 
 class Client
-    def initialize(host, port, verbose =false)
+    def initialize(host, port, options)
         @host = host
         @port = port
-        @verbose = verbose
+        @verbose = options[:verbose]
     end
 
     def start
