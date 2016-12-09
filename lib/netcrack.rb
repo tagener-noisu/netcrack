@@ -72,14 +72,14 @@ end
 class Client
     def initialize(host, port, options)
         default_opts = {
-            pps: 100_000,
+            ppr: 100_000,
             verbose: false
         }
         options.merge(default_opts) { |k, new, default| new || default }
 
         @host = host
         @port = port
-        @pps = options[:pps]
+        @ppr = options[:ppr]
         @verbose = options[:verbose]
     end
 
@@ -92,7 +92,7 @@ class Client
             end
 
             @socket.puts("MORE")
-            @socket.puts(@pps)
+            @socket.puts(@ppr)
             input = @socket.gets.chomp
             if (input == "DONE")
                 $stderr.puts("Done.")
