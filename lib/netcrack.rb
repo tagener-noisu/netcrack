@@ -51,12 +51,13 @@ class Server
     end
 
     def print_more
+        count = @client.gets.chomp.to_i
         if ($stdin.eof?)
             @client.puts("DONE")
             log("  DONE")
             return
         end
-        5.times do
+        count.times do
             @client.puts($stdin.gets)
             return if ($stdin.eof?)
         end
@@ -67,6 +68,7 @@ class Client
     def initialize(host, port, options)
         @host = host
         @port = port
+        @pps = options[:pps]
         @verbose = options[:verbose]
     end
 
@@ -79,6 +81,7 @@ class Client
             end
 
             @socket.puts("MORE")
+            @socket.puts(@pps)
             input = @socket.gets.chomp
             if (input == "DONE")
                 $stderr.puts("Done.")

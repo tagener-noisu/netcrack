@@ -34,6 +34,7 @@ end
 
 def connect(host, port, options)
     default_opts = {
+        pps: 100_000,
         verbose: false
     }
     options.merge(default_opts) { |k, new, default| new || default }
@@ -49,17 +50,20 @@ end
 
 opts = GetoptLong.new(
     ['--server',  '-s', GetoptLong::REQUIRED_ARGUMENT],
+    ['--pps',  '-p', GetoptLong::REQUIRED_ARGUMENT],
     ['--verbose', '-v', GetoptLong::NO_ARGUMENT],
     ['--help',    '-h', GetoptLong::NO_ARGUMENT])
 
-
 options = {
+    pps: 100_000, # passwords per connect
     verbose: false
 }
 opts.each { |opt, arg|
     case opt
         when "--help"
             print_usage
+        when "--pps"
+            options[:pps] = arg.to_i
         when "--verbose"
             options[:verbose] = true
         when "--server"
