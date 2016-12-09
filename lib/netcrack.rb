@@ -6,6 +6,11 @@ VERSION = "0.0.1"
 
 class Server
     def initialize(port, options)
+        default_opts = {
+            verbose: false
+        }
+        options.merge(default_opts) { |k, new, default| new || default }
+
         @port = port
         @verbose = options[:verbose]
     end
@@ -66,6 +71,12 @@ end
 
 class Client
     def initialize(host, port, options)
+        default_opts = {
+            pps: 100_000,
+            verbose: false
+        }
+        options.merge(default_opts) { |k, new, default| new || default }
+
         @host = host
         @port = port
         @pps = options[:pps]

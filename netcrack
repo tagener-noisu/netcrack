@@ -18,11 +18,6 @@ EOF
 end
 
 def listen(port, options)
-    default_opts = {
-        verbose: false
-    }
-    options.merge(default_opts) { |k, new, default| new || default }
-
     s = Netcrack::Server.new(port, options)
     trap 'INT' do
         s.shutdown
@@ -33,12 +28,6 @@ def listen(port, options)
 end
 
 def connect(host, port, options)
-    default_opts = {
-        pps: 100_000,
-        verbose: false
-    }
-    options.merge(default_opts) { |k, new, default| new || default }
-
     c = Netcrack::Client.new(host, port, options)
     trap 'INT' do
         c.shutdown
