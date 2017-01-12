@@ -110,14 +110,22 @@ class Client
     def connect
         socket = TCPSocket.new(@host, @port)
         log("Conected to #{@host}:#{@port}")
-        banner = socket.gets.chomp
-        log("  #{banner}")
-        if (!banner.match(/^netcrack/))
+        valid = verify_protocol(socket)
+        if (!valid)
             $stderr.puts("Unsupported server. Aborting.")
             socket.close
             return nil
         end
         return socket
+    end
+
+    def verify_protocol(socket)
+        banner = socket.gets.chomp
+        log("  #{banner}")
+        if (banner.match(/^netcrack/))
+            return true
+        end
+        return false
     end
 
     def shutdown
