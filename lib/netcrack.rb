@@ -21,7 +21,7 @@ class Server
 
         loop do
             @client = @tcp.accept
-            log("Connection from: #{@client.addr[3]}")
+            log("Connection from: #{@client.peeraddr(false)[3]}")
             @client.puts(banner)
             input = @client.gets
             log("  #{input}")
