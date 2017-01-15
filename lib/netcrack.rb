@@ -13,6 +13,8 @@ class Server
 
         @port = port
         @verbose = options[:verbose]
+        @input = options[:input]
+        @err = options[:err]
     end
 
     def start
@@ -41,7 +43,7 @@ class Server
 
     def log(msg)
         if (@verbose)
-            $stderr.puts(msg)
+            @err.puts(msg)
         end
     end
 
@@ -57,14 +59,14 @@ class Server
 
     def print_more
         count = @client.gets.chomp.to_i
-        if ($stdin.eof?)
+        if (@input.eof?)
             @client.puts("DONE")
             log("  DONE")
             return
         end
         count.times do
-            @client.puts($stdin.gets)
-            return if ($stdin.eof?)
+            @client.puts(@input.gets)
+            return if (@input.eof?)
         end
     end
 end
@@ -81,6 +83,8 @@ class Client
         @port = port
         @ppr = options[:ppr]
         @verbose = options[:verbose]
+        @output = options[:output]
+        @err = options[:err]
     end
 
     def start
@@ -95,14 +99,14 @@ class Client
             @socket.puts(@ppr)
             input = @socket.gets.chomp
             if (input == "DONE")
-                $stderr.puts("Done.")
+                @err.puts("Done.")
                 shutdown
                 return
             else
-                puts(input)
+                @output.puts(input)
             end
             while (!@socket.eof?)
-                puts(@socket.gets)
+                @output.puts(@socket.gets)
             end
         end
     end
@@ -112,7 +116,7 @@ class Client
         log("Conected to #{@host}:#{@port}")
         valid = verify_protocol(socket)
         if (!valid)
-            $stderr.puts("Unsupported server. Aborting.")
+            @err.puts("Unsupported server. Aborting.")
             socket.close
             return nil
         end
@@ -136,7 +140,7 @@ class Client
 
     def log(msg)
         if (@verbose)
-            $stderr.puts(msg)
+            @err.puts(msg)
         end
     end
 end
