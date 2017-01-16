@@ -2,7 +2,7 @@ require 'socket'
 
 module Netcrack
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 class Server
     def initialize(port, options)
