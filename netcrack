@@ -45,10 +45,7 @@ opts = GetoptLong.new(
 
 options = {
     ppr: 100_000, # passwords per request
-    verbose: false,
-    input: $stdin,
-    output: $stdout,
-    err: $stderr
+    verbose: false
 }
 opts.each { |opt, arg|
     case opt
