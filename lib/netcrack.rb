@@ -7,7 +7,9 @@ VERSION = "0.0.2"
 class Server
     def initialize(port, options)
         default_opts = {
-            verbose: false
+            verbose: false,
+            input: $stdin,
+            err: $stderr
         }
         options.merge(default_opts) { |k, new, default| new || default }
 
@@ -75,7 +77,9 @@ class Client
     def initialize(host, port, options)
         default_opts = {
             ppr: 100_000,
-            verbose: false
+            verbose: false,
+            output: $stdout,
+            err: $stderr
         }
         options.merge(default_opts) { |k, new, default| new || default }
 
