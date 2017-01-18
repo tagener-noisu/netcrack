@@ -11,7 +11,7 @@ class Server
             input: $stdin,
             err: $stderr
         }
-        options.merge(default_opts) { |k, new, default| new || default }
+        options.merge!(default_opts) { |k, new, default| new || default }
 
         @port = port
         @verbose = options[:verbose]
@@ -81,7 +81,7 @@ class Client
             output: $stdout,
             err: $stderr
         }
-        options.merge(default_opts) { |k, new, default| new || default }
+        options.merge!(default_opts) { |k, new, default| new || default }
 
         @host = host
         @port = port
