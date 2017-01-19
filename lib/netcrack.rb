@@ -5,7 +5,7 @@ module Netcrack
 VERSION = "0.0.2"
 
 class Server
-    def initialize(port, options)
+    def initialize(port, options = {})
         default_opts = {
             verbose: false,
             input: $stdin,
@@ -74,7 +74,7 @@ class Server
 end
 
 class Client
-    def initialize(host, port, options)
+    def initialize(host, port, options = {})
         default_opts = {
             ppr: 100_000,
             verbose: false,
