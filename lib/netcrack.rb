@@ -127,15 +127,6 @@ class Client
         return socket
     end
 
-    def verify_protocol(socket)
-        banner = socket.gets.chomp
-        log("  #{banner}")
-        if (banner.match(/^netcrack/))
-            return true
-        end
-        return false
-    end
-
     def shutdown
         @socket.close
     end
@@ -146,6 +137,15 @@ class Client
         if (@verbose)
             @err.puts(msg)
         end
+    end
+
+    def verify_protocol(socket)
+        banner = socket.gets.chomp
+        log("  #{banner}")
+        if (banner.match(/^netcrack/))
+            return true
+        end
+        return false
     end
 end
 
