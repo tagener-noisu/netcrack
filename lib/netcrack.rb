@@ -57,6 +57,8 @@ class Server
         if (input == "MORE")
             print_more
         end
+        log("Protocol mismatch")
+        @client.puts("Protocol mismatch")
     end
 
     def print_more
@@ -120,7 +122,7 @@ class Client
         log("Conected to #{@host}:#{@port}")
         valid = verify_protocol(socket)
         if (!valid)
-            @err.puts("Unsupported server. Aborting.")
+            @err.puts("Protocol mismatch")
             socket.close
             return nil
         end
