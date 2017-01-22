@@ -13,6 +13,7 @@ class Server
         }
         options.merge!(default_opts) { |k, new, default| new || default }
 
+        @alive = false
         @port = port
         @verbose = options[:verbose]
         @input = options[:input]
@@ -22,9 +23,18 @@ class Server
     def start
         @tcp = TCPServer.new(@port)
         log("Server started at port #{@port}")
+        @alive = true
 
         loop do
-            @client = @tcp.accept
+            begin
+                @client = @tcp.accept
+            rescue IOError
+                if @alive
+                    raise
+                else
+                    return
+                end
+            end
             log("Connection from: #{@client.peeraddr(false)[3]}")
             @client.puts(banner)
             input = @client.gets
@@ -37,7 +47,12 @@ class Server
         end
     end
 
+    def alive?
+        @alive
+    end
+
     def shutdown
+        @alive = false
         @tcp.close
     end
 
