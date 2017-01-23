@@ -29,11 +29,8 @@ class Server
             begin
                 @client = @tcp.accept
             rescue IOError
-                if @alive
-                    raise
-                else
-                    return
-                end
+                raise if @alive
+                return
             end
             log("Connection from: #{@client.peeraddr(false)[3]}")
             @client.puts(banner)
