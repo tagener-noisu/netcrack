@@ -22,6 +22,14 @@ class TestNetcrack < MiniTest::Test
         assert(banner.match(/^netcrack/))
     end
 
+    def test_server_matches_protocol
+        sock = TCPSocket.new(@host, @port)
+        sock.gets # skip the banner
+        sock.puts("BAD COMMAND")
+        answer = sock.gets.chomp
+        assert_equal(answer, "Protocol mismatch");
+    end
+
     def teardown
         @server.shutdown
         @server_thr.join
