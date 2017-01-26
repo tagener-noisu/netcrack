@@ -10,9 +10,7 @@ class TestNetcrack < MiniTest::Test
         @server_thr = Thread.new {
                 @server.start
         }
-        until (@server.alive?)
-            sleep 0.3
-        end
+        sleep(0.1) until (@server.alive?)
     end
 
     def test_server_returns_the_banner
