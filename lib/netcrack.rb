@@ -68,6 +68,7 @@ class Server
     def process(input)
         if (input == "MORE")
             print_more
+            return
         end
         log("Protocol mismatch")
         @client.puts("Protocol mismatch")
