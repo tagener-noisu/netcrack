@@ -6,7 +6,8 @@ class TestNetcrack < MiniTest::Test
     def setup
         @host = '127.0.0.1'
         @port = 5000
-        @server = Netcrack::Server.new(@port)
+        inp = File.open("test/input", "r")
+        @server = Netcrack::Server.new(@port, {input: inp})
         @server_thr = Thread.new {
                 @server.start
         }
@@ -26,6 +27,19 @@ class TestNetcrack < MiniTest::Test
         sock.puts("BAD COMMAND")
         answer = sock.gets.chomp
         assert_equal(answer, "Protocol mismatch");
+    end
+
+    def test_server_returns_input_on_more_command
+        sock = TCPSocket.new(@host, @port)
+        sock.gets # skip the banner
+        sock.puts("MORE")
+        sock.puts("3") # number of lines required
+        lines = [sock.gets, sock.gets, sock.gets]
+        assert(sock.eof?)
+        sock.close
+        assert_equal(lines[0], "LOREM\n")
+        assert_equal(lines[1], "IPSUM\n")
+        assert_equal(lines[2], "DOLOR\n")
     end
 
     def teardown
