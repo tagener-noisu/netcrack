@@ -68,4 +68,4 @@ if (ARGF.argv.length < 2)
 end
 connect(ARGF.argv[0], ARGF.argv[1].to_i, options)
 
-# vim:ts=4:sw=0:sts=4:et:
+# vim:ts=4:sw=0:et:

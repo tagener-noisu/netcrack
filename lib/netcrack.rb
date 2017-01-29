@@ -166,4 +166,4 @@ end
 
 end
 
-# vim:ts=4:sw=0:sts=4:et:
+# vim:ts=4:sw=0:et:
