@@ -9,7 +9,7 @@ class TestNetcrack < MiniTest::Test
         inp = File.open("test/input", "r")
         @server = Netcrack::Server.new(@port, {input: inp})
         @server_thr = Thread.new {
-                @server.start
+            @server.start
         }
         sleep(0.1) until (@server.alive?)
     end
