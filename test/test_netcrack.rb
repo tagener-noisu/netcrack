@@ -26,6 +26,7 @@ class TestNetcrack < MiniTest::Test
         sock.gets # skip the banner
         sock.puts("BAD COMMAND")
         answer = sock.gets.chomp
+        sock.close
         assert_equal(answer, "Protocol mismatch");
     end
 
