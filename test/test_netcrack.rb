@@ -26,6 +26,7 @@ class TestNetcrack < MiniTest::Test
         sock.gets # skip the banner
         sock.puts("BAD COMMAND")
         answer = sock.gets.chomp
+        assert(sock.eof?) # closes connection on bad command
         sock.close
         assert_equal(answer, "Protocol mismatch");
     end
@@ -36,7 +37,7 @@ class TestNetcrack < MiniTest::Test
         sock.puts("MORE")
         sock.puts("3") # number of lines required
         lines = [sock.gets, sock.gets, sock.gets]
-        assert(sock.eof?)
+        assert(sock.eof?) # closes connection after the answer
         sock.close
         assert_equal(lines[0], "LOREM\n")
         assert_equal(lines[1], "IPSUM\n")
