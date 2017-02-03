@@ -110,7 +110,6 @@ class Client
         loop do
             @socket = connect
             if (!@socket)
-                shutdown
                 return
             end
 
