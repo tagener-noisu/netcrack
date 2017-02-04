@@ -44,6 +44,24 @@ class TestNetcrack < MiniTest::Test
         assert_equal(lines[2], "DOLOR\n")
     end
 
+    def test_client_verifies_protocol
+        serv = TCPServer.new(@port + 1)
+        serv_thr = Thread.new {
+            cli = serv.accept
+            cli.puts("SSY-2.0")
+            cli.close
+        }
+        output = File.open("test/output", "w+")
+        client = Netcrack::Client.new(@host, @port + 1, {err: output})
+        client.start # returns when server is stopped
+
+        output.rewind
+        assert_equal(output.gets, "Protocol mismatch\n")
+        output.close
+
+        serv_thr.join
+    end
+
     def teardown
         @server.shutdown
         @server_thr.join
