@@ -53,7 +53,7 @@ class TestNetcrack < MiniTest::Test
         }
         output = File.open("test/output", "w+")
         client = Netcrack::Client.new(@host, @port + 1, {err: output})
-        client.start # returns when server is stopped
+        client.start # returns when client is stopped
 
         output.rewind
         assert_equal(output.gets, "Protocol mismatch\n")
