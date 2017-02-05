@@ -6,8 +6,8 @@ class TestNetcrack < MiniTest::Test
     def setup
         @host = '127.0.0.1'
         @port = 5000
-        inp = File.open("test/input", "r")
-        @server = Netcrack::Server.new(@port, {input: inp})
+        @serv_inp = File.open("test/input", "r")
+        @server = Netcrack::Server.new(@port, {input: @serv_inp})
         @server_thr = Thread.new {
             @server.start
         }
@@ -64,6 +64,7 @@ class TestNetcrack < MiniTest::Test
 
     def teardown
         @server.shutdown
+        @serv_inp.close
         @server_thr.join
     end
 end
