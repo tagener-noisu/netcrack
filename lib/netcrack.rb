@@ -1,8 +1,9 @@
+require 'thread'
 require 'socket'
 
 module Netcrack
 
-VERSION = "0.0.2"
+VERSION = "0.1.0"
 
 class Server
     def initialize(port, options = {})
@@ -27,20 +28,22 @@ class Server
 
         loop do
             begin
-                @client = @tcp.accept
+                client = @tcp.accept
             rescue IOError
                 raise if @alive
                 return
             end
-            log("Connection from: #{@client.peeraddr(false)[3]}")
-            @client.puts(banner)
-            input = @client.gets
-            log("  #{input}")
-            if (input)
-                process(input.chomp)
-            end
-            @client.close
-            log("Connection closed by server")
+            Thread.new(client) { |client|
+                log("Connection from: #{client.peeraddr(false)[3]}")
+                client.puts(banner)
+                input = client.gets
+                log("  #{input}")
+                if (input)
+                    process(input.chomp, client)
+                end
+                client.close
+                log("Connection closed by server")
+            }
         end
     end
 
@@ -65,24 +68,24 @@ class Server
         "netcrack #{VERSION}"
     end
 
-    def process(input)
+    def process(input, client)
         if (input == "MORE")
-            print_more
+            print_more(client)
             return
         end
         log("Protocol mismatch")
-        @client.puts("Protocol mismatch")
+        client.puts("Protocol mismatch")
     end
 
-    def print_more
-        count = @client.gets.chomp.to_i
+    def print_more(client)
+        count = client.gets.chomp.to_i
         if (@input.eof?)
-            @client.puts("DONE")
+            client.puts("DONE")
             log("  DONE")
             return
         end
         count.times do
-            @client.puts(@input.gets)
+            client.puts(@input.gets)
             return if (@input.eof?)
         end
     end
