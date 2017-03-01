@@ -19,6 +19,7 @@ class Server
         @verbose = options[:verbose]
         @input = options[:input]
         @err = options[:err]
+        @input_mutex = Mutex.new
     end
 
     def start
@@ -84,10 +85,17 @@ class Server
             log("  DONE")
             return
         end
-        count.times do
-            client.puts(@input.gets)
-            return if (@input.eof?)
-        end
+
+        buf = []
+        @input_mutex.synchronize {
+            count.times {
+                buf << @input.gets
+                break if (@input.eof?)
+            }
+        }
+        buf.each { |line|
+            client.puts(line)
+        }
     end
 end
 
