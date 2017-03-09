@@ -6,7 +6,9 @@ class TestNetcrack < MiniTest::Test
     def setup
         @host = '127.0.0.1'
         @port = 5000
-        @serv_inp = File.open("test/input", "r")
+        @serv_inp = File.open("test/input", "w+")
+        @serv_inp.write("LOREM\nIPSUM\nDOLOR")
+        @serv_inp.rewind
         @server = Netcrack::Server.new(@port, {input: @serv_inp})
         @server_thr = Thread.new {
             @server.start
@@ -65,6 +67,9 @@ class TestNetcrack < MiniTest::Test
     def teardown
         @server.shutdown
         @serv_inp.close
+        ["test/input", "test/output"].each { |f|
+            File.delete(f) if File.exist?(f)
+        }
         @server_thr.join
     end
 end
