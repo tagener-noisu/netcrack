@@ -34,15 +34,15 @@ class Server
                 raise if @alive
                 return
             end
-            Thread.new(client) { |client|
-                log("Connection from: #{client.peeraddr(false)[3]}")
-                client.puts(banner)
-                input = client.gets
+            Thread.new(client) { |c|
+                log("Connection from: #{c.peeraddr(false)[3]}")
+                c.puts(banner)
+                input = c.gets
                 log("  #{input}")
                 if (input)
-                    process(input.chomp, client)
+                    process(input.chomp, c)
                 end
-                client.close
+                c.close
                 log("Connection closed by server")
             }
         end
