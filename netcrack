@@ -39,7 +39,6 @@ def listen(port, options)
         exit
     end
     s.start
-    exit
 end
 
 def connect(host, port, options)
@@ -49,7 +48,6 @@ def connect(host, port, options)
         exit
     end
     c.start
-    exit
 end
 
 opts = GetoptLong.new(
@@ -60,7 +58,6 @@ opts = GetoptLong.new(
 
 options = {
     ppr: 100_000, # passwords per request
-    verbose: false
 }
 opts.each { |opt, arg|
     case opt
@@ -73,6 +70,7 @@ opts.each { |opt, arg|
         when "--server"
             port = arg.to_i
             listen(port, options)
+            exit
         else
             print_usage
         end
